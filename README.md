@@ -9,7 +9,7 @@ The unraid-tailscale plugin had dropped support for Unraid 6.12. This is a fork 
 Go to Unraid Dashboard -> Plugins -> Install Plugin and paste the following URL:
 
 ```
-https://github.com/louislam/unraid-6.12-tailscale/blob/master/plugin/tailscale.plg
+https://raw.githubusercontent.com/louislam/unraid-6.12-tailscale/refs/heads/master/plugin/tailscale.plg
 ```
 
 
