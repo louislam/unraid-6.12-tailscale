@@ -1,11 +1,11 @@
 <?xml version='1.0' standalone='yes'?>
 <!DOCTYPE PLUGIN>
 
-<PLUGIN
+<PLUGIN 
   name="tailscale"
   author="Derek Kaser"
   version="2025.10.29"
-  pluginURL="https://raw.githubusercontent.com/unraid/unraid-tailscale/main/plugin/tailscale.plg"
+  pluginURL="https://raw.githubusercontent.com/louislam/unraid-6.12-tailscale/main/plugin/tailscale.plg"
   launch="Settings/Tailscale"
   support="https://forums.unraid.net/topic/136889-plugin-tailscale/"
   min="6.12.0"
@@ -13,24 +13,10 @@
 
 <CHANGES>
 <![CDATA[
-###2025.04.17###
+###2025.10.29###
 
-- Update Tailscale to 1.82.5
-- Add Reauthenticate button
-- Prevent erasing configuration when connected via Tailscale IP
-
-###2025.03.28###
-
-- Update Tailscale to 1.82.0
-
-###2025.03.16###
-- Improved login flow
-- Allow searching for exit nodes
-
-###2025.03.05###
-
-- Update Tailscale to 1.80.3
-- New configuration interface
+- Maintain support for Unraid 6.12 (Don't try this on Unraid 7+)
+- Update Tailscale to 1.90.2
 
 For older releases, see https://github.com/unraid/unraid-tailscale/releases
 
@@ -90,7 +76,7 @@ tailscale completion bash > /etc/bash_completion.d/tailscale
 rm -f /boot/config/plugins/tailscale/tailscale-utils-*.txz
 rm -f $(ls /boot/config/plugins/tailscale/unraid-tailscale-utils-*.txz 2>/dev/null | grep -v '3.2.0')
 rm -f $(ls /boot/config/plugins/tailscale/unraid-plugin-diagnostics-*.txz 2>/dev/null)
-rm -f $(ls /boot/config/plugins/tailscale/*.tgz 2>/dev/null | grep -v 'tailscale_1.82.5_amd64')
+rm -f $(ls /boot/config/plugins/tailscale/*.tgz 2>/dev/null | grep -v 'tailscale_1.90.2_amd64')
 
 # check to see if the state file has been backed up to Unraid Connect
 if [ -d "/boot/.git" ]; then
@@ -99,7 +85,7 @@ if [ -d "/boot/.git" ]; then
             echo "*          WARNING           *"
             echo "******************************"
             echo " "
-            echo "The Tailscale state file has been backed up to Unraid Connect via Flash backup."
+            echo "The Tailscale state file has been backed up to Unraid Connect via Flash backup." 
             echo " "
             echo "To remove this backup, please perform the following steps:"
             echo "1. Go to Settings -> Management Access".

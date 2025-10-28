@@ -1,20 +1,6 @@
-###2025.04.17###
+###2025.10.29###
 
-- Update Tailscale to 1.82.5
-- Add Reauthenticate button
-- Prevent erasing configuration when connected via Tailscale IP
-
-###2025.03.28###
-
-- Update Tailscale to 1.82.0
-
-###2025.03.16###
-- Improved login flow
-- Allow searching for exit nodes
-
-###2025.03.05###
-
-- Update Tailscale to 1.80.3
-- New configuration interface
+- Maintain support for Unraid 6.12 (Don't try this on Unraid 7+)
+- Update Tailscale to 1.90.2
 
 For older releases, see https://github.com/unraid/unraid-tailscale/releases

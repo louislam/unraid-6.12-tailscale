@@ -15,4 +15,20 @@ https://github.com/louislam/unraid-6.12-tailscale/blob/master/plugin/tailscale.p
 
 ## Notes
 
+### Build
+
+
+Setup environment
+
+```bash
+wsl --install debian --web-download
+wsl
+pip install jinja2-cli
+```
+
+```bash
+cd tools
+./build-plugin.sh
+```
+
 Official Repo: https://github.com/unraid/unraid-tailscale
