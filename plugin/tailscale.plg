@@ -4,7 +4,7 @@
 <PLUGIN 
   name="tailscale"
   author="Derek Kaser"
-  version="2025.10.29"
+  version="2025.11.02"
   pluginURL="https://raw.githubusercontent.com/louislam/unraid-6.12-tailscale/main/plugin/tailscale.plg"
   launch="Settings/Tailscale"
   support="https://forums.unraid.net/topic/136889-plugin-tailscale/"
@@ -23,9 +23,9 @@ For older releases, see https://github.com/unraid/unraid-tailscale/releases
 ]]>
 </CHANGES>
 
-<FILE Name="/boot/config/plugins/tailscale/tailscale_1.90.2_amd64.tgz">
-<URL>https://pkgs.tailscale.com/stable/tailscale_1.90.2_amd64.tgz</URL>
-<SHA256>e8d1ec2f0eba10c83ba9d170dc79432aca3ef7cc684d5249e9b91dad519582ad</SHA256>
+<FILE Name="/boot/config/plugins/tailscale/tailscale_1.90.6_amd64.tgz">
+<URL>https://pkgs.tailscale.com/stable/tailscale_1.90.6_amd64.tgz</URL>
+<SHA256>cc51b5b6fe86a25e66b2ef037334e799a61d06dc64fabcadfe6e2a7588a2b2c7</SHA256>
 </FILE>
 
 <FILE Name="/boot/config/plugins/tailscale/unraid-tailscale-utils-3.2.0-noarch-1.txz">
@@ -46,7 +46,7 @@ fi
 upgradepkg --install-new --reinstall /boot/config/plugins/tailscale/unraid-tailscale-utils-3.2.0-noarch-1.txz
 
 mkdir -p /usr/local/emhttp/plugins/tailscale/bin
-tar xzf /boot/config/plugins/tailscale/tailscale_1.90.2_amd64.tgz --strip-components 1 -C /usr/local/emhttp/plugins/tailscale/bin
+tar xzf /boot/config/plugins/tailscale/tailscale_1.90.6_amd64.tgz --strip-components 1 -C /usr/local/emhttp/plugins/tailscale/bin
 
 echo "state" > /boot/config/plugins/tailscale/.gitignore
 
@@ -54,7 +54,7 @@ ln -s /usr/local/emhttp/plugins/tailscale/bin/tailscale /usr/local/sbin/tailscal
 ln -s /usr/local/emhttp/plugins/tailscale/bin/tailscaled /usr/local/sbin/tailscaled
 
 mkdir -p /var/local/emhttp/plugins/tailscale
-echo "VERSION=2025.10.29" > /var/local/emhttp/plugins/tailscale/tailscale.ini
+echo "VERSION=2025.11.02" > /var/local/emhttp/plugins/tailscale/tailscale.ini
 echo "BRANCH=main" >> /var/local/emhttp/plugins/tailscale/tailscale.ini
 
 # remove other branches (e.g., if switching from main to preview)
@@ -76,7 +76,7 @@ tailscale completion bash > /etc/bash_completion.d/tailscale
 rm -f /boot/config/plugins/tailscale/tailscale-utils-*.txz
 rm -f $(ls /boot/config/plugins/tailscale/unraid-tailscale-utils-*.txz 2>/dev/null | grep -v '3.2.0')
 rm -f $(ls /boot/config/plugins/tailscale/unraid-plugin-diagnostics-*.txz 2>/dev/null)
-rm -f $(ls /boot/config/plugins/tailscale/*.tgz 2>/dev/null | grep -v 'tailscale_1.90.2_amd64')
+rm -f $(ls /boot/config/plugins/tailscale/*.tgz 2>/dev/null | grep -v 'tailscale_1.90.6_amd64')
 
 # check to see if the state file has been backed up to Unraid Connect
 if [ -d "/boot/.git" ]; then
@@ -99,7 +99,7 @@ fi
 echo ""
 echo "----------------------------------------------------"
 echo " tailscale has been installed."
-echo " Version: 2025.10.29"
+echo " Version: 2025.11.02"
 echo "----------------------------------------------------"
 echo ""
 ]]>
