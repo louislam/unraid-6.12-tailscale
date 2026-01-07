@@ -31,7 +31,8 @@ interface TailscaleConfig {
 }
 
 const CONFIG_PATH = "./tools/plugin/tailscale.json";
-const BUILD_SCRIPT = "./build-plugin.sh"; // Script expects to be run from tools directory
+const BUILD_SCRIPT = "build-plugin.sh"; // Will be executed from tools directory
+const TOOLS_DIR = "./tools";
 const TAILSCALE_STABLE_URL = "https://pkgs.tailscale.com/stable/";
 const GITHUB_API_URL = "https://api.github.com/repos/tailscale/tailscale/releases/latest";
 
@@ -94,9 +95,12 @@ async function fetchLatestTailscaleVersion(): Promise<string | null> {
       const aParts = a.split('.').map(Number);
       const bParts = b.split('.').map(Number);
       
-      for (let i = 0; i < 3; i++) {
-        if (aParts[i] !== bParts[i]) {
-          return bParts[i] - aParts[i];
+      const maxLength = Math.max(aParts.length, bParts.length);
+      for (let i = 0; i < maxLength; i++) {
+        const aPart = aParts[i] || 0;
+        const bPart = bParts[i] || 0;
+        if (aPart !== bPart) {
+          return bPart - aPart;
         }
       }
       return 0;
@@ -202,7 +206,7 @@ async function buildPlugin(): Promise<boolean> {
     
     const command = new Deno.Command("sh", {
       args: [BUILD_SCRIPT],
-      cwd: "./tools", // Run from tools directory as the script uses relative paths
+      cwd: TOOLS_DIR, // Run from tools directory as the script uses relative paths
       stdout: "piped",
       stderr: "piped",
     });
