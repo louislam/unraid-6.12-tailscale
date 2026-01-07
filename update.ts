@@ -121,41 +121,25 @@ async function fetchSHA256(packageName: string): Promise<string | null> {
   try {
     console.log(`Fetching SHA256 for ${packageName}...`);
     
-    // The checksums are typically in a .sha256 file or listed on the page
-    // Try fetching the .sha256 file first
+    // The checksums are available at .sha256 URLs
     const sha256Url = `${TAILSCALE_STABLE_URL}${packageName}.sha256`;
     const response = await fetch(sha256Url);
     
-    if (response.ok) {
-      const text = await response.text();
-      // SHA256 files typically have format: "hash  filename"
-      const hash = text.trim().split(/\s+/)[0];
-      return hash;
+    if (!response.ok) {
+      throw new Error(`Failed to fetch SHA256: ${response.status} ${response.statusText}`);
     }
     
-    // If .sha256 file doesn't exist, try to parse from the main page
-    const pageResponse = await fetch(TAILSCALE_STABLE_URL);
-    if (!pageResponse.ok) {
-      throw new Error(`Failed to fetch page: ${pageResponse.status}`);
+    const text = await response.text();
+    // SHA256 files typically have format: "hash  filename" or just "hash"
+    const hash = text.trim().split(/\s+/)[0];
+    
+    // Validate it's a proper SHA256 hash (64 hex characters)
+    if (!/^[a-f0-9]{64}$/i.test(hash)) {
+      throw new Error(`Invalid SHA256 format: ${hash}`);
     }
     
-    const html = await pageResponse.text();
-    
-    // Look for the SHA256 hash near the package name
-    // This is a fallback and might need adjustment based on actual page structure
-    const lines = html.split('\n');
-    for (const line of lines) {
-      if (line.includes(packageName)) {
-        // Look for a 64-character hex string (SHA256)
-        const hashMatch = line.match(/([a-f0-9]{64})/i);
-        if (hashMatch) {
-          return hashMatch[1];
-        }
-      }
-    }
-    
-    console.error(`Could not find SHA256 for ${packageName}`);
-    return null;
+    console.log(`SHA256: ${hash}`);
+    return hash;
   } catch (error) {
     console.error(`Error fetching SHA256: ${error}`);
     return null;
