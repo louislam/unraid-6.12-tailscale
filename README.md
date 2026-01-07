@@ -15,6 +15,30 @@ https://raw.githubusercontent.com/louislam/unraid-6.12-tailscale/refs/heads/mast
 
 ## Notes
 
+### Automated Updates
+
+The repository includes an automated update script (`update.ts`) that checks for the latest Tailscale version and updates the plugin accordingly.
+
+**Prerequisites:**
+- Deno runtime (https://deno.land/)
+
+**Usage:**
+```bash
+./update.ts
+# or
+deno run --allow-net --allow-read --allow-write --allow-run update.ts
+```
+
+**What it does:**
+1. Fetches the latest Tailscale version from https://pkgs.tailscale.com/stable/
+2. Compares with the current version in `tools/plugin/tailscale.json`
+3. If an update is available:
+   - Updates the version (YYYY.MM.DD format)
+   - Updates tailscaleVersion (tailscale_{VERSION}_amd64)
+   - Updates tailscaleSHA256 (checksum of the amd64 package)
+   - Executes `tools/build-plugin.sh` to rebuild the plugin
+4. If already up-to-date, exits without making changes
+
 ### Build
 
 
