@@ -72,12 +72,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="v${{ steps.get_version.outputs.version }}"
+          TAG="${{ steps.get_version.outputs.version }}"
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists, skipping"
           else
             gh release create "$TAG" \
-              --title "Tailscale v${{ steps.get_version.outputs.version }}" \
-              --notes "Automated update to Tailscale v${{ steps.get_version.outputs.version }}" \
+              --title "${{ steps.get_version.outputs.version }}" \
+              --notes "Automated update to Tailscale ${{ steps.get_version.outputs.version }}" \
               --target master
           fi
