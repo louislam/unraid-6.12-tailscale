@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip
+          sudo apt-get install -y python3-pip jq
           pip install jinja-cli
       
       - name: Run update script
@@ -50,7 +50,7 @@ jobs:
         if: steps.check_changes.outputs.has_changes == 'true'
         id: get_version
         run: |
-          VERSION=$(cat tools/plugin/tailscale.json | grep -o '"tailscaleVersion": "tailscale_[^"]*"' | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+          VERSION=$(jq -r '.tailscaleVersion' tools/plugin/tailscale.json | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Tailscale version: $VERSION"
       
@@ -72,7 +72,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "v${{ steps.get_version.outputs.version }}" \
-            --title "Tailscale v${{ steps.get_version.outputs.version }}" \
-            --notes "Automated update to Tailscale v${{ steps.get_version.outputs.version }}" \
-            --target master
+          TAG="v${{ steps.get_version.outputs.version }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists, skipping"
+          else
+            gh release create "$TAG" \
+              --title "Tailscale v${{ steps.get_version.outputs.version }}" \
+              --notes "Automated update to Tailscale v${{ steps.get_version.outputs.version }}" \
+              --target master
+          fi
