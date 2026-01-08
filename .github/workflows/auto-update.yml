@@ -1,0 +1,83 @@
+name: Auto Update Tailscale
+
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+      
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip jq
+          pip install jinja-cli
+      
+      - name: Run update script
+        run: deno task update
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected"
+          fi
+      
+      - name: Get Tailscale version
+        if: steps.check_changes.outputs.has_changes == 'true'
+        id: get_version
+        run: |
+          VERSION=$(jq -r '.tailscaleVersion' tools/plugin/tailscale.json | sed 's/tailscale_\(.*\)_amd64/\1/')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Tailscale version: $VERSION"
+      
+      - name: Configure Git
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git add .
+          git commit -m "Update Tailscale to v${{ steps.get_version.outputs.version }}"
+          git push origin master
+      
+      - name: Create release
+        if: steps.check_changes.outputs.has_changes == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.get_version.outputs.version }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists, skipping"
+          else
+            gh release create "$TAG" \
+              --title "${{ steps.get_version.outputs.version }}" \
+              --notes "Automated update to Tailscale ${{ steps.get_version.outputs.version }}" \
+              --target master
+          fi
