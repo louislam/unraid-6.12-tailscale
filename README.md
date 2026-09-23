@@ -1,5 +1,7 @@
 # Fork of Unraid-tailscale for Unraid 6.12
 
+⚠️ I had finally upgraded to Unraid 7.X, which means this plugin is useless for me now, I don't test it anymore, use at your own risk. 
+
 ## Why?
 
 The unraid-tailscale plugin had dropped support for Unraid 6.12. This is a fork to keep Tailscale updated for Unraid 6.12 users.
